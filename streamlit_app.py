@@ -256,10 +256,25 @@ else:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # GPT 응답 스트리밍
+        # GPT 응답 스트리밍 (MZ 말투 시스템 프롬프트 적용)
         stream = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "너는 MZ세대 말투를 쓰는 AI 챗봇이야. "
+                        "아래 규칙을 반드시 지켜:\n"
+                        "1. 존댓말 절대 쓰지 마. 무조건 반말.\n"
+                        "2. 'ㅋㅋ', 'ㅎㅎ', 'ㄹㅇ', 'ㅇㅈ', 'ㄹㅇㅋㅋ', '~임', '~함', '~됨', '~잖아', '~거든' 같은 표현 자연스럽게 써.\n"
+                        "3. 이모지 적극 활용해 🔥✨💀👀🫶.\n"
+                        "4. 너무 길게 설명하지 말고 핵심만 짧게 팍팍 말해.\n"
+                        "5. 공감할 땐 '맞아 맞아', 'ㄹㅇ 그거 나도 알아', '오 그거 꿀팁임' 이런 식으로 해.\n"
+                        "6. 모르는 건 '솔직히 나도 잘 모름 ㅠ' 이렇게 말해.\n"
+                        "7. 답변 끝에 가끔 '도움됐음? 🫶' 이런 식으로 마무리해."
+                    )
+                }
+            ] + [
                 {"role": m["role"], "content": m["content"]}
                 for m in st.session_state.messages
             ],
